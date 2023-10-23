@@ -1,17 +1,16 @@
 package lab1;
 
-import lab1.Student;
-import lab1.Subject;
-import lab1.Enrollment;
-
 import org.junit.jupiter.api.Test;
+
+import java.time.LocalDate;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class StudentTest {
 
     @Test
     public void testEnrollStudentInSubject() {
-        Student student = new Student.StudentBuilder("John").age(20).build();
+        Student student = new Student.StudentBuilder("John").dateOfBirth(LocalDate.of(1998, 12, 20)).build();
         Subject math = new Subject("Math", 4);
         student.enroll(math, 90.0);
 
@@ -22,9 +21,9 @@ public class StudentTest {
 
     @Test
     public void testStudentEqualsAndHashCode() {
-        Student student1 = new Student.StudentBuilder("John").age(20).build();
-        Student student2 = new Student.StudentBuilder("John").age(20).build();
-        Student student3 = new Student.StudentBuilder("Alice").age(22).build();
+        Student student1 = new Student.StudentBuilder("John").dateOfBirth(LocalDate.of(2000, 1, 1)).build();
+        Student student2 = new Student.StudentBuilder("John").dateOfBirth(LocalDate.of(2000, 1, 1)).build();
+        Student student3 = new Student.StudentBuilder("Alice").dateOfBirth(LocalDate.of(2000, 1, 1)).build();
 
         assertEquals(student1, student2);
         assertNotEquals(student1, student3);
@@ -58,4 +57,3 @@ public class StudentTest {
         assertNotEquals(enrollment1.hashCode(), enrollment3.hashCode());
     }
 }
-

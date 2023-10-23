@@ -1,5 +1,7 @@
 package lab1;
 
+import java.time.LocalDate;
+
 public class main {
     public static void main(String[] args) {
         // Create subjects
@@ -9,7 +11,7 @@ public class main {
 
         // Create a student using the Builder pattern
         Student student = new Student.StudentBuilder("John")
-                .age(20)
+                .dateOfBirth(LocalDate.of(2000, 1, 1))
                 .build();
 
         // Enroll the student in subjects and assign grades
