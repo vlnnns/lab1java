@@ -23,21 +23,6 @@ public class Student {
         return enrollments;
     }
 
-    public List<Subject> getSubjects() {
-        List<Subject> subjects = new ArrayList<>();
-        for (Enrollment enrollment : enrollments) {
-            subjects.add(enrollment.getSubject());
-        }
-        return subjects;
-    }
-
-    public List<Double> getGrades() {
-        List<Double> grades = new ArrayList<>();
-        for (Enrollment enrollment : enrollments) {
-            grades.add(enrollment.getGrade());
-        }
-        return grades;
-    }
 
     @Override
     public String toString() {
