@@ -1,14 +1,14 @@
-package org.example;
+package lab1;
 
 public class main {
     public static void main(String[] args) {
         // Create subjects
-        org.example.Subject math = new org.example.Subject("Math", 4);
-        org.example.Subject physics = new org.example.Subject("Physics", 3);
-        org.example.Subject chemistry = new org.example.Subject("Chemistry", 3);
+        Subject math = new Subject("Math", 4);
+        Subject physics = new Subject("Physics", 3);
+        Subject chemistry = new Subject("Chemistry", 3);
 
         // Create a student using the Builder pattern
-        org.example.Student student = new org.example.Student.StudentBuilder("John")
+        Student student = new Student.StudentBuilder("John")
                 .age(20)
                 .build();
 
@@ -22,7 +22,7 @@ public class main {
         System.out.println(student);
 
         System.out.println("\nEnrollments:");
-        for (org.example.Enrollment enrollment : student.getEnrollments()) {
+        for (Enrollment enrollment : student.getEnrollments()) {
             System.out.println(enrollment);
         }
     }

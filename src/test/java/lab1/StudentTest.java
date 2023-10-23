@@ -1,6 +1,8 @@
-import org.example.Student;
-import org.example.Subject;
-import org.example.Enrollment;
+package lab1;
+
+import lab1.Student;
+import lab1.Subject;
+import lab1.Enrollment;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
