@@ -7,7 +7,6 @@ import java.util.Objects;
 
 public class Student {
     private String name;
-    //TO do: change to date of birth
     private LocalDate dateOfBirth;
     private List<Enrollment> enrollments;
 
