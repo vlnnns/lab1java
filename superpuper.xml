@@ -1,1 +1,1 @@
-<SuperPuper><name>John</name><age>30</age><children>2</children></SuperPuper>
+<Student><name>John</name><dateOfBirth>2000-01-01</dateOfBirth><enrollments/></Student>

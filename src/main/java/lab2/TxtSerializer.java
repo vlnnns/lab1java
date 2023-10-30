@@ -12,13 +12,13 @@ public class TxtSerializer implements Serializer{
 
     @Override
     public <T> void serialize(T entity, String filename) throws IOException {
-        String stepler = entity.toString();
-        Files.write(Paths.get(filename),stepler.getBytes());
+        String data = entity.toString();
+        Files.write(Paths.get(filename),data.getBytes());
     }
 
     @Override
     public <T> T deserialize(String filename, Class<T> entityType) throws IOException {
-        String stepler = new String(Files.readAllBytes(Paths.get(filename)));
+        String data = new String(Files.readAllBytes(Paths.get(filename)));
         return null;
     }
 }

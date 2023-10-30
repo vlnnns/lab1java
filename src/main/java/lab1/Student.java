@@ -1,19 +1,47 @@
 package lab1;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class Student {
+
+    public String getName() {
+        return name;
+    }
+   @JsonFormat (shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    public LocalDate getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDateOfBirth(LocalDate dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public void setEnrollments(List<Enrollment> enrollments) {
+        this.enrollments = enrollments;
+    }
+
     private String name;
+
     private LocalDate dateOfBirth;
     private List<Enrollment> enrollments;
 
     private Student(StudentBuilder builder) {
-        this.name = builder.name;
-        this.dateOfBirth = builder.build().dateOfBirth;
         this.enrollments = new ArrayList<>();
+        this.name = builder.name;
+        this.dateOfBirth = builder.dateOfBirth;
+//        this.dateOfBirth = builder.build().dateOfBirth;
+    }
+
+    private Student (){
     }
 
     public void enroll(Subject subject, double grade) {

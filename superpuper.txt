@@ -1,1 +1,1 @@
-SuperPuper{name='John', age=30, children=2}
+Student{name='John', age=2000-01-01, enrollments=[]}
