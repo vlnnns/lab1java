@@ -23,9 +23,5 @@ public class main {
         System.out.println("Student Info:");
         System.out.println(student);
 
-        System.out.println("\nEnrollments:");
-        for (Enrollment enrollment : student.getEnrollments()) {
-            System.out.println(enrollment);
-        }
     }
 }

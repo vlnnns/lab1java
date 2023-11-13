@@ -29,4 +29,8 @@ public class Subject {
     public int hashCode() {
         return Objects.hash(name, credits);
     }
+
+    public Object getName() {
+        return this.name;
+    }
 }

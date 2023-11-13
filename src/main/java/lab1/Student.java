@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class Student {
+public class Student implements Comparable<Student>{
 
     public String getName() {
         return name;
@@ -48,9 +48,11 @@ public class Student {
         enrollments.add(new Enrollment(subject, grade));
     }
 
+
     public List<Enrollment> getEnrollments() {
         return enrollments;
     }
+
 
 
     @Override
@@ -69,6 +71,36 @@ public class Student {
     @Override
     public int hashCode() {
         return Objects.hash(name, dateOfBirth, enrollments);
+    }
+
+    @Override
+    public int compareTo(Student student) {
+        return this.name.compareTo(student.name);
+    }
+
+
+    public boolean hasEnrollmentForSubject(String subjectName) {
+        return getEnrollments().stream()
+                .anyMatch(enrollment -> enrollment.getSubject().getName().equals(subjectName));
+    }
+
+    // Метод, який повертає оцінку студента за предмет
+    public double getEnrollmentGradeForSubject(String subjectName) {
+        return getEnrollments().stream()
+                .filter(enrollment -> enrollment.getSubject().getName().equals(subjectName))
+                .findFirst()
+                .map(Enrollment::getGrade)
+                .orElse(0.0); // За замовчуванням, якщо предмет "Math" відсутній, повертається 0.0
+    }
+
+    public double getAverageGrade(){
+
+        double totalGrade = 0.0;
+        for (Enrollment enrollment : enrollments) {
+            totalGrade += enrollment.getGrade();
+        }
+
+        return totalGrade / enrollments.size();
     }
 
     public static class StudentBuilder {
