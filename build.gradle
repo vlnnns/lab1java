@@ -16,6 +16,10 @@ dependencies {
     implementation group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-xml', version: '2.16.0-rc1'
     // https://mvnrepository.com/artifact/com.fasterxml.jackson.datatype/jackson-datatype-jsr310
     implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.15.3'
+// https://mvnrepository.com/artifact/org.hibernate.validator/hibernate-validator
+    implementation group: 'org.hibernate.validator', name: 'hibernate-validator', version: '8.0.1.Final'
+// https://mvnrepository.com/artifact/org.glassfish.expressly/expressly
+    implementation group: 'org.glassfish.expressly', name: 'expressly', version: '5.0.0'
 
 
 }

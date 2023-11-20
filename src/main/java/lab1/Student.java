@@ -1,11 +1,16 @@
 package lab1;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class Student implements Comparable<Student>{
 
@@ -29,9 +34,13 @@ public class Student implements Comparable<Student>{
         this.enrollments = enrollments;
     }
 
+    @NotBlank(message = "Name cannot be blank")
+    @Size(min = 2, max = 50, message = "Name must be between 2 and 50 characters")
     private String name;
 
+    @Past(message = "Date of birth must be in the past")
     private LocalDate dateOfBirth;
+
     private List<Enrollment> enrollments;
 
     private Student(StudentBuilder builder) {
@@ -103,8 +112,11 @@ public class Student implements Comparable<Student>{
         return totalGrade / enrollments.size();
     }
 
+
     public static class StudentBuilder {
+
         private String name;
+
         private LocalDate dateOfBirth;
 
         public StudentBuilder(String name) {
@@ -116,9 +128,27 @@ public class Student implements Comparable<Student>{
             return this;
         }
 
-
         public Student build() {
-            return new Student(this);
+            Student student = new Student(this);
+            validate(student);
+            return student;
+        }
+
+        private void validate(Student student) {
+
+            ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+            Validator validator = factory.getValidator();
+
+            Set<String> validationMessages = new HashSet<>();
+            Set<ConstraintViolation<Student>> violations = validator.validate(student);
+
+            for (ConstraintViolation<Student> violation : violations) {
+                validationMessages.add(violation.getInvalidValue() + ": " + violation.getMessage());
+            }
+
+            if (!validationMessages.isEmpty()) {
+                throw new IllegalArgumentException("Invalid fields: " + String.join(", ", validationMessages));
+            }
         }
     }
 }

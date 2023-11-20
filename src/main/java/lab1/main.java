@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 public class main {
     public static void main(String[] args) {
-        // Create subjects
+        //Create subjects
         Subject math = new Subject("Math", 4);
         Subject physics = new Subject("Physics", 3);
         Subject chemistry = new Subject("Chemistry", 3);
@@ -23,5 +23,12 @@ public class main {
         System.out.println("Student Info:");
         System.out.println(student);
 
+        try {
+            Student student1 = new Student.StudentBuilder("Kate")
+                    .dateOfBirth(LocalDate.of(2025, 10, 15))
+                    .build();
+        } catch (IllegalArgumentException e) {
+            System.out.println("Caught IllegalArgumentException: " + e.getMessage());
+        }
     }
 }
