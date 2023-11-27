@@ -11,8 +11,8 @@ public class StudentTest {
     @Test
     public void testEnrollStudentInSubject() {
         Student student = new Student.StudentBuilder("John").dateOfBirth(LocalDate.of(1998, 12, 20)).build();
-        Subject math = new Subject("Math", 4);
-        student.enroll(math, 90.0);
+        Subject math = new Subject("Math", 4, 1);
+        student.enroll(math, 90.0, 1);
 
         assertEquals(1, student.getEnrollments().size());
         assertEquals(math, student.getEnrollments().get(0).getSubject());
@@ -33,9 +33,9 @@ public class StudentTest {
 
     @Test
     public void testSubjectEqualsAndHashCode() {
-        Subject math1 = new Subject("Math", 4);
-        Subject math2 = new Subject("Math", 4);
-        Subject physics = new Subject("Physics", 3);
+        Subject math1 = new Subject("Math", 4, 1);
+        Subject math2 = new Subject("Math", 4, 1;
+        Subject physics = new Subject("Physics", 3, 2);
 
         assertEquals(math1, math2);
         assertNotEquals(math1, physics);
@@ -45,11 +45,11 @@ public class StudentTest {
 
     @Test
     public void testEnrollmentEqualsAndHashCode() {
-        Subject math = new Subject("Math", 4);
-        Enrollment enrollment1 = new Enrollment(math, 90.0);
-        Enrollment enrollment2 = new Enrollment(math, 90.0);
-        Subject physics = new Subject("Physics", 3);
-        Enrollment enrollment3 = new Enrollment(physics, 85.5);
+        Subject math = new Subject("Math", 4, 1);
+        Enrollment enrollment1 = new Enrollment(math, 90.0, 1);
+        Enrollment enrollment2 = new Enrollment(math, 90.0, 1);
+        Subject physics = new Subject("Physics", 3, 2);
+        Enrollment enrollment3 = new Enrollment(physics, 85.5, 2);
 
         assertEquals(enrollment1, enrollment2);
         assertNotEquals(enrollment1, enrollment3);

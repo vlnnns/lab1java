@@ -1,20 +1,33 @@
 package lab1;
 
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Objects;
 
 public class Subject {
+    private int id;
     private String name;
     private int credits;
 
-    public Subject(String name, int credits) {
+    public Subject(String name, int credits, int id) {
+        this.id = id;
         this.name = name;
         this.credits = credits;
+
     }
 
+    public int getId() {
+        return id;
+    }
 
+    public void setId(int id) {
+        this.id = id;
+    }
     @Override
     public String toString() {
-        return "Subject{name='" + name + "', credits=" + credits + "}";
+        return "Subject{id = ' "+ id + " ' , name='" + name + "', credits=" + credits + "}";
     }
 
     @Override
@@ -27,10 +40,26 @@ public class Subject {
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, credits);
+        return Objects.hash(id, name, credits);
     }
 
     public Object getName() {
         return this.name;
     }
+    public static void createSubjectsTable() {
+        try (Connection connection = DatabaseConnection.getConnection();
+             Statement statement = connection.createStatement()) {
+            String createTableQuery = "CREATE TABLE IF NOT EXISTS subjects (" +
+                    "id SERIAL PRIMARY KEY," +
+                    "name VARCHAR(100) NOT NULL," +
+                    "credits INTEGER" +
+                    ")";
+            statement.execute(createTableQuery);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
 }

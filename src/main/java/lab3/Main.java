@@ -21,22 +21,22 @@ public class Main {
                 .build();
         // Enroll the student in subjects and assign grades
 
-        Subject math = new Subject("Math", 3);
-        Subject physics = new Subject("Physics", 4);
-        Subject chemistry = new Subject("Chemistry", 3);
+        Subject math = new Subject("Math", 3, 1);
+        Subject physics = new Subject("Physics", 4, 2);
+        Subject chemistry = new Subject("Chemistry", 3, 3);
 
         // Створення декількох студентів для тестування
-        student1.enroll(math, 90.0);
-        student1.enroll(physics, 85.5);
-        student1.enroll(chemistry, 78.0);
+        student1.enroll(math, 90.0, 1);
+        student1.enroll(physics, 85.5, 2);
+        student1.enroll(chemistry, 78.0, 3);
 
-        student2.enroll(math, 75.0);
-        student2.enroll(physics, 80.5);
-        student2.enroll(chemistry, 92.0);
+        student2.enroll(math, 75.0, 1);
+        student2.enroll(physics, 80.5, 2);
+        student2.enroll(chemistry, 92.0, 3);
 
-        student3.enroll(math, 88.0);
-        student3.enroll(physics, 63.5);
-        student3.enroll(chemistry, 41.0);
+        student3.enroll(math, 88.0, 1);
+        student3.enroll(physics, 63.5, 2);
+        student3.enroll(chemistry, 41.0, 3);
         // Додавання студентів до списку
         List<Student> students = new ArrayList<>();
         students.add(student1);

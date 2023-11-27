@@ -9,6 +9,10 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Size;
 
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -33,6 +37,7 @@ public class Student implements Comparable<Student>{
     public void setEnrollments(List<Enrollment> enrollments) {
         this.enrollments = enrollments;
     }
+    private int id;
 
     @NotBlank(message = "Name cannot be blank")
     @Size(min = 2, max = 50, message = "Name must be between 2 and 50 characters")
@@ -44,17 +49,24 @@ public class Student implements Comparable<Student>{
     private List<Enrollment> enrollments;
 
     private Student(StudentBuilder builder) {
+        this.id = builder.id;
         this.enrollments = new ArrayList<>();
         this.name = builder.name;
         this.dateOfBirth = builder.dateOfBirth;
-//        this.dateOfBirth = builder.build().dateOfBirth;
+
+    }
+    public int getId() {
+        return id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
     private Student (){
     }
 
-    public void enroll(Subject subject, double grade) {
-        enrollments.add(new Enrollment(subject, grade));
+    public void enroll(Subject subject, double grade, int id) {
+        enrollments.add(new Enrollment(subject, grade, id));
     }
 
 
@@ -66,7 +78,7 @@ public class Student implements Comparable<Student>{
 
     @Override
     public String toString() {
-        return "Student{name='" + name + "', age=" + dateOfBirth + ", enrollments=" + enrollments + "}";
+        return "Student{id='"+ id +"', name='" + name + "', age=" + dateOfBirth + ", enrollments=" + enrollments + "}";
     }
 
     @Override
@@ -74,12 +86,12 @@ public class Student implements Comparable<Student>{
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         Student student = (Student) obj;
-        return dateOfBirth == student.dateOfBirth && Objects.equals(name, student.name) && Objects.equals(enrollments, student.enrollments);
+        return dateOfBirth == student.dateOfBirth && Objects.equals(name, student.name) && Objects.equals(enrollments, student.enrollments) && Objects.equals(id, student.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, dateOfBirth, enrollments);
+        return Objects.hash(id, name, dateOfBirth, enrollments);
     }
 
     @Override
@@ -87,20 +99,6 @@ public class Student implements Comparable<Student>{
         return this.name.compareTo(student.name);
     }
 
-
-    public boolean hasEnrollmentForSubject(String subjectName) {
-        return getEnrollments().stream()
-                .anyMatch(enrollment -> enrollment.getSubject().getName().equals(subjectName));
-    }
-
-    // Метод, який повертає оцінку студента за предмет
-    public double getEnrollmentGradeForSubject(String subjectName) {
-        return getEnrollments().stream()
-                .filter(enrollment -> enrollment.getSubject().getName().equals(subjectName))
-                .findFirst()
-                .map(Enrollment::getGrade)
-                .orElse(0.0); // За замовчуванням, якщо предмет "Math" відсутній, повертається 0.0
-    }
 
     public double getAverageGrade(){
 
@@ -112,8 +110,27 @@ public class Student implements Comparable<Student>{
         return totalGrade / enrollments.size();
     }
 
+    public static void createTable() {
+        try (Connection connection = DatabaseConnection.getConnection();
+             Statement statement = connection.createStatement()) {
+            String createTableQuery = "CREATE TABLE IF NOT EXISTS student (" +
+                    "id SERIAL PRIMARY KEY," +
+                    "name VARCHAR(100) NOT NULL," +
+                    "date_of_birth DATE NOT NULL," +
+                    "enrollment_id INTEGER," +
+                    "FOREIGN KEY (enrollment_id) REFERENCES enrollments(id)" + // Змінено назву таблиці на enrollments
+                    ");";
+
+            statement.execute(createTableQuery);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
     public static class StudentBuilder {
+        private int id;
 
         private String name;
 
@@ -121,6 +138,11 @@ public class Student implements Comparable<Student>{
 
         public StudentBuilder(String name) {
             this.name = name;
+        }
+
+        public StudentBuilder id(int id) {
+            this.id = id;
+            return this;
         }
 
         public StudentBuilder dateOfBirth(LocalDate dateOfBirth) {
@@ -150,5 +172,6 @@ public class Student implements Comparable<Student>{
                 throw new IllegalArgumentException("Invalid fields: " + String.join(", ", validationMessages));
             }
         }
+
     }
 }
