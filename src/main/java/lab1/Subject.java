@@ -46,20 +46,6 @@ public class Subject {
     public Object getName() {
         return this.name;
     }
-    public static void createSubjectsTable() {
-        try (Connection connection = DatabaseConnection.getConnection();
-             Statement statement = connection.createStatement()) {
-            String createTableQuery = "CREATE TABLE IF NOT EXISTS subjects (" +
-                    "id SERIAL PRIMARY KEY," +
-                    "name VARCHAR(100) NOT NULL," +
-                    "credits INTEGER" +
-                    ")";
-            statement.execute(createTableQuery);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
 
 
 }

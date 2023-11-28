@@ -34,7 +34,7 @@ public class StudentTest {
     @Test
     public void testSubjectEqualsAndHashCode() {
         Subject math1 = new Subject("Math", 4, 1);
-        Subject math2 = new Subject("Math", 4, 1;
+        Subject math2 = new Subject("Math", 4, 1);
         Subject physics = new Subject("Physics", 3, 2);
 
         assertEquals(math1, math2);
@@ -46,10 +46,10 @@ public class StudentTest {
     @Test
     public void testEnrollmentEqualsAndHashCode() {
         Subject math = new Subject("Math", 4, 1);
-        Enrollment enrollment1 = new Enrollment(math, 90.0, 1);
-        Enrollment enrollment2 = new Enrollment(math, 90.0, 1);
+        Grade enrollment1 = new Grade(math, 90.0, 1);
+        Grade enrollment2 = new Grade(math, 90.0, 1);
         Subject physics = new Subject("Physics", 3, 2);
-        Enrollment enrollment3 = new Enrollment(physics, 85.5, 2);
+        Grade enrollment3 = new Grade(physics, 85.5, 2);
 
         assertEquals(enrollment1, enrollment2);
         assertNotEquals(enrollment1, enrollment3);

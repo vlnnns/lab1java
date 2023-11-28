@@ -34,8 +34,8 @@ public class Student implements Comparable<Student>{
         this.dateOfBirth = dateOfBirth;
     }
 
-    public void setEnrollments(List<Enrollment> enrollments) {
-        this.enrollments = enrollments;
+    public void setEnrollments(List<Grade> enrollments) {
+        this.grades = enrollments;
     }
     private int id;
 
@@ -46,11 +46,11 @@ public class Student implements Comparable<Student>{
     @Past(message = "Date of birth must be in the past")
     private LocalDate dateOfBirth;
 
-    private List<Enrollment> enrollments;
+    private List<Grade> grades;
 
     private Student(StudentBuilder builder) {
         this.id = builder.id;
-        this.enrollments = new ArrayList<>();
+        this.grades = new ArrayList<>();
         this.name = builder.name;
         this.dateOfBirth = builder.dateOfBirth;
 
@@ -62,23 +62,23 @@ public class Student implements Comparable<Student>{
     public void setId(int id) {
         this.id = id;
     }
-    private Student (){
+    public Student(int id, String name, LocalDate birthDate){
     }
 
     public void enroll(Subject subject, double grade, int id) {
-        enrollments.add(new Enrollment(subject, grade, id));
+        grades.add(new Grade(subject, grade, id));
     }
 
 
-    public List<Enrollment> getEnrollments() {
-        return enrollments;
+    public List<Grade> getEnrollments() {
+        return grades;
     }
 
 
 
     @Override
     public String toString() {
-        return "Student{id='"+ id +"', name='" + name + "', age=" + dateOfBirth + ", enrollments=" + enrollments + "}";
+        return "Student{id='"+ id +"', name='" + name + "', age=" + dateOfBirth + ", enrollments=" + grades + "}";
     }
 
     @Override
@@ -86,12 +86,12 @@ public class Student implements Comparable<Student>{
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         Student student = (Student) obj;
-        return dateOfBirth == student.dateOfBirth && Objects.equals(name, student.name) && Objects.equals(enrollments, student.enrollments) && Objects.equals(id, student.id);
+        return dateOfBirth == student.dateOfBirth && Objects.equals(name, student.name) && Objects.equals(grades, student.grades) && Objects.equals(id, student.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, dateOfBirth, enrollments);
+        return Objects.hash(id, name, dateOfBirth, grades);
     }
 
     @Override
@@ -103,28 +103,11 @@ public class Student implements Comparable<Student>{
     public double getAverageGrade(){
 
         double totalGrade = 0.0;
-        for (Enrollment enrollment : enrollments) {
-            totalGrade += enrollment.getGrade();
+        for (Grade grade : grades) {
+            totalGrade += grade.getGrade();
         }
 
-        return totalGrade / enrollments.size();
-    }
-
-    public static void createTable() {
-        try (Connection connection = DatabaseConnection.getConnection();
-             Statement statement = connection.createStatement()) {
-            String createTableQuery = "CREATE TABLE IF NOT EXISTS student (" +
-                    "id SERIAL PRIMARY KEY," +
-                    "name VARCHAR(100) NOT NULL," +
-                    "date_of_birth DATE NOT NULL," +
-                    "enrollment_id INTEGER," +
-                    "FOREIGN KEY (enrollment_id) REFERENCES enrollments(id)" + // Змінено назву таблиці на enrollments
-                    ");";
-
-            statement.execute(createTableQuery);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        return totalGrade / grades.size();
     }
 
 

@@ -31,10 +31,6 @@ public class Main {
 //            System.out.println("Caught IllegalArgumentException: " + e.getMessage());
 //        }
 
-        // Create tables
-        Subject.createSubjectsTable();
-        Student.createTable();
-        Enrollment.createTable();
 
 
     }

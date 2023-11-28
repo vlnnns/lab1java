@@ -1,6 +1,6 @@
 package lab3;
 
-import lab1.Enrollment;
+import lab1.Grade;
 import lab1.Student;
 
 import java.time.LocalDate;
