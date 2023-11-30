@@ -66,7 +66,6 @@ public class SchoolService1 implements ISchoolService{
             }
         }
 
-        // Sorting the studentsInCurrentMonth list by student name
         studentsInCurrentMonth.sort(Comparator.comparing(Student::getName));
 
         return studentsInCurrentMonth;

@@ -10,6 +10,7 @@ public class Main {
 
     public static void main(String[] args) {
 
+
         new Manager().dropDatabaseStructure();
 
 //        StudentDB.createStudentTable();
@@ -35,30 +36,62 @@ public class Main {
 
 //        SubjectDB.dropSubjectTable();
 
-//        StudentDB.createStudentTable();
-//        StudentDB.addStudent("John", LocalDate.of(1995, 5, 15));
-//        StudentDB.addStudent("John1", LocalDate.of(1967, 2, 12));
-//        StudentDB.addStudent("John2", LocalDate.of(1995, 2, 21));
-//        SubjectDB.createSubjectTable();
-//        SubjectDB.addSubject("Mathematics");
-//        SubjectDB.addSubject("Physic");
-//        SubjectDB.addSubject("English");
-//        GradeDB.createGradeTable();
-//        GradeDB.addGrade(1, 2, 85.5f);
-//
-//        GradeDB.updateGradeValue(1, 90.0f);
-//
-//        GradeDB.addGrade(2, 1, 75.5f);
-//        GradeDB.addGrade(3, 3, 60.5f);
-//
-//        List<Float> updatedGrades = GradeDB.getGradesByStudentId(1);
-//        System.out.println("\nUpdated grades for student ID 1:");
-//        for (float grade : updatedGrades) {
-//            System.out.println(grade);
-//        }
-//
-//        GradeDB.deleteGrade(1);
-//
-//        GradeDB.dropGradeTable();
+        StudentDB.createStudentTable();
+        StudentDB.addStudent("John Doe", LocalDate.of(1998, 5, 15));
+        StudentDB.addStudent("Alice Smith", LocalDate.of(1997, 8, 21));
+        StudentDB.addStudent("Bob Johnson", LocalDate.of(1999, 4, 10));
+        StudentDB.addStudent("Eva Williams", LocalDate.of(2000, 11, 30));
+
+        List<Student> students = StudentDB.getAllStudents();
+
+
+
+        SubjectDB.createSubjectTable();
+        SubjectDB.addSubject("Mathematics");
+        SubjectDB.addSubject("Physic");
+        SubjectDB.addSubject("English");
+
+        List<String> subjects = SubjectDB.getAllSubjects();
+        System.out.println("All Subjects:");
+        subjects.forEach(System.out::println);
+
+        GradeDB.createGradeTable();
+        GradeDB.addGrade(1, 2, 85.5f);
+
+        GradeDB.updateGradeValue(1, 90.0f);
+
+        GradeDB.addGrade(2, 1, 75.5f);
+        GradeDB.addGrade(3, 3, 80.0f);
+        GradeDB.addGrade(4, 3, 70.0f);
+
+        List<Float> grades = GradeDB.getGradesByStudentId(1);
+        System.out.println("Grades for student ID 1:");
+        for (float grade : grades) {
+            System.out.println(grade);
+        }
+
+        List<Float> updatedGrades = GradeDB.getGradesByStudentId(1);
+        System.out.println("\nUpdated grades for student ID 1:");
+        for (float grade : updatedGrades) {
+            System.out.println(grade);
+        }
+
+        System.out.println("Student by id");
+        StudentDB.getStudentById(1);
+
+        System.out.println("Student by part of name");
+        StudentDB.getByPartName("Jo");
+
+        System.out.println("Student by current month");
+        StudentDB.getByCurrentMonth();
+
+        System.out.println("Sorted by average grade");
+        StudentDB.sortStudentsByAverageGrade();
+
+        System.out.println("Sorted by date of birth");
+        StudentDB.sortStudentsByDateOfBirth();
+
+        System.out.println("Sorted by name");
+        StudentDB.sortStudentsByName();
     }
 }

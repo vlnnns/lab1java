@@ -36,7 +36,7 @@ public class SubjectDB {
              )) {
             statement.setString(1, subjectName);
             statement.executeUpdate();
-            System.out.println("Subject added successfully.");
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -48,7 +48,8 @@ public class SubjectDB {
              Statement statement = connection.createStatement()) {
             ResultSet resultSet = statement.executeQuery("SELECT subject_name FROM subjects");
             while (resultSet.next()) {
-                subjects.add(resultSet.getString("subject_name"));
+                String subjectName = resultSet.getString("subject_name");
+                subjects.add(subjectName);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -64,6 +65,7 @@ public class SubjectDB {
              )) {
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
+
             if (resultSet.next()) {
                 subjectName = resultSet.getString("subject_name");
             }
@@ -81,7 +83,6 @@ public class SubjectDB {
             statement.setString(1, newSubjectName);
             statement.setInt(2, id);
             statement.executeUpdate();
-            System.out.println("Subject name updated successfully.");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -94,7 +95,6 @@ public class SubjectDB {
              )) {
             statement.setInt(1, id);
             statement.executeUpdate();
-            System.out.println("Subject deleted successfully.");
         } catch (SQLException e) {
             e.printStackTrace();
         }
