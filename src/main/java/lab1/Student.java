@@ -62,8 +62,6 @@ public class Student implements Comparable<Student>{
     public void setId(int id) {
         this.id = id;
     }
-    public Student(int id, String name, LocalDate birthDate){
-    }
 
     public void enroll(Subject subject, double grade, int id) {
         grades.add(new Grade(subject, grade, id));

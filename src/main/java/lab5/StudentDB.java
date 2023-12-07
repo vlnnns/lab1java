@@ -5,7 +5,6 @@ import lab1.Student;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 public class StudentDB {
@@ -38,13 +37,13 @@ public class StudentDB {
         }
     }
 
-    public static void addStudent(String name, LocalDate birthDate) {
+    public static void addStudent(Student student) {
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(
                      "INSERT INTO students (name, birth_date) VALUES (?, ?)"
              )) {
-            statement.setString(1, name);
-            statement.setObject(2, birthDate);
+            statement.setString(1, student.getName());
+            statement.setObject(2, student.getDateOfBirth());
 
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -53,70 +52,14 @@ public class StudentDB {
     }
 
 
-    public static List<Student> getAllStudents() {
-        List<Student> students = new ArrayList<>();
-        try (Connection connection = DatabaseConnection.getConnection();
-             Statement statement = connection.createStatement()) {
-            ResultSet resultSet = statement.executeQuery("SELECT id, name, birth_date FROM students");
-            while (resultSet.next()) {
-                int id = resultSet.getInt("id");
-                String name = resultSet.getString("name");
-                Date sqlBirthDate = resultSet.getDate("birth_date");
-
-                LocalDate birthDate = null;
-                if (sqlBirthDate != null) {
-                    birthDate = sqlBirthDate.toLocalDate();
-                } else {
-                    System.out.println("SQL Birth Date is null for ID: " + id);
-                }
-
-                // Check the retrieved values
-                System.out.println("ID: " + id + ", Name: " + name + ", Birth Date: " + birthDate);
-
-                Student student = new Student(id, name, birthDate);
-                students.add(student);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return students;
-    }
-
-    public static Student getStudentById(int studentId) {
-        Student student = null;
-        try (Connection connection = DatabaseConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement("SELECT id, name, birth_date FROM students WHERE id = ?")) {
-
-            statement.setInt(1, studentId);
-            ResultSet resultSet = statement.executeQuery();
-
-            if (resultSet.next()) {
-                int id = resultSet.getInt("id");
-                String name = resultSet.getString("name");
-                LocalDate birthDate = resultSet.getDate("birth_date").toLocalDate(); // Retrieve and convert date
-
-                student = new Student(id, name, birthDate);
-
-                // Printing retrieved values
-                System.out.println("Retrieved ID: " + id + ", Name: " + name + ", Birth Date: " + birthDate);
-
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return student;
-    }
-
-
-
-    public static void updateStudent(int id, String name, LocalDate birthDate) {
+    public static void updateStudent(Student student) {
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(
                      "UPDATE students SET name = ?, birth_date = ? WHERE id = ?"
              )) {
-            statement.setString(1, name);
-            statement.setObject(2, birthDate);
-            statement.setInt(3, id);
+            statement.setString(1, student.getName());
+            statement.setObject(2, student.getDateOfBirth());
+            statement.setInt(3, student.getId());
 
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -135,129 +78,80 @@ public class StudentDB {
         }
     }
 
-    public static List<Student> sortStudentsByName() {
-        List<Student> students = new ArrayList<>();
-        try (Connection connection = DatabaseConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(
-                     "SELECT * FROM students ORDER BY name"
-             );
-             ResultSet resultSet = statement.executeQuery()) {
+    private List<Student> fromResultSet(ResultSet resultSet) throws SQLException {
+        List<Student> matchingStudents = new ArrayList<>();
+        while (resultSet.next()) {
+            int id = resultSet.getInt("id");
+            String studentName = resultSet.getString("name");
+            LocalDate birthDate = resultSet.getObject("birth_date", LocalDate.class);
 
-            while (resultSet.next()) {
-                int id = resultSet.getInt("id");
-                String name = resultSet.getString("name");
-                LocalDate birthDate = resultSet.getObject("birth_date", LocalDate.class);
+            Student student = new Student.StudentBuilder(studentName).id(id).dateOfBirth(birthDate).build();
+            matchingStudents.add(student);
 
-                Student student = new Student(id, name, birthDate);
-                students.add(student);
-
-                System.out.println("ID: " + id + ", Name: " + name + ", Birth Date: " + birthDate);
-
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
-        return students;
+        return matchingStudents;
     }
 
-    public static List<Student> sortStudentsByDateOfBirth() {
-        List<Student> students = new ArrayList<>();
+    public List<Student> getAllStudents() throws SQLException {
         try (Connection connection = DatabaseConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(
-                     "SELECT * FROM students ORDER BY birth_date"
-             );
-             ResultSet resultSet = statement.executeQuery()) {
-
-            while (resultSet.next()) {
-                int id = resultSet.getInt("id");
-                String name = resultSet.getString("name");
-                LocalDate birthDate = resultSet.getObject("birth_date", LocalDate.class);
-
-                Student student = new Student(id, name, birthDate);
-                students.add(student);
-
-                System.out.println("ID: " + id + ", Name: " + name + ", Birth Date: " + birthDate);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+             PreparedStatement statement = connection.prepareStatement("SELECT * FROM students")) {
+            return fromResultSet(statement.executeQuery());
         }
-        return students;
     }
 
-    public static List<Student> sortStudentsByAverageGrade() {
-        List<Student> students = new ArrayList<>();
+    public Student getStudentById(int studentId) throws SQLException {
         try (Connection connection = DatabaseConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(
-                     "SELECT students.id, students.name, students.birth_date, AVG(grades.grade_value) AS average_grade " +
-                             "FROM students " +
-                             "LEFT JOIN grades ON students.id = grades.student_id " +
-                             "GROUP BY students.id, students.name, students.birth_date " +
-                             "ORDER BY AVG(grades.grade_value) DESC"
-             );
-             ResultSet resultSet = statement.executeQuery()) {
-
-            while (resultSet.next()) {
-                int id = resultSet.getInt("id");
-                String name = resultSet.getString("name");
-                LocalDate birthDate = resultSet.getObject("birth_date", LocalDate.class);
-
-                Student student = new Student(id, name, birthDate);
-                students.add(student);
-                System.out.println("ID: " + id + ", Name: " + name + ", Birth Date: " + birthDate);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+             PreparedStatement statement = connection.prepareStatement("SELECT * FROM students WHERE id = ?")) {
+            statement.setInt(1, studentId);
+            return fromResultSet(statement.executeQuery()).get(0);
         }
-        return students;
     }
 
-    public static List<Student> getByPartName(String name) {
+    public List<Student> sortStudentsByName() throws SQLException {
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement("SELECT * FROM students ORDER BY name")) {
+            return fromResultSet(statement.executeQuery());
+        }
+    }
+
+    public List<Student> sortStudentsByDateOfBirth() throws SQLException {
+        List<Student> students = new ArrayList<>();
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement("SELECT * FROM students ORDER BY birth_date")) {
+            return fromResultSet(statement.executeQuery());
+        }
+    }
+
+    public List<Student> sortStudentsByAverageGrade() throws SQLException {
+        List<Student> students = new ArrayList<>();
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement("SELECT students.id, students.name, students.birth_date, AVG(grades.grade_value) AS average_grade " +
+                     "FROM students " +
+                     "LEFT JOIN grades ON students.id = grades.student_id " +
+                     "GROUP BY students.id, students.name, students.birth_date " +
+                     "ORDER BY AVG(grades.grade_value) DESC")) {
+            return fromResultSet(statement.executeQuery());
+        }
+    }
+
+
+    public List<Student> getByPartName(String name) throws SQLException {
         List<Student> matchingStudents = new ArrayList<>();
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement("SELECT * FROM students WHERE name LIKE ?")) {
             statement.setString(1, "%" + name + "%");
-            ResultSet resultSet = statement.executeQuery();
-
-            while (resultSet.next()) {
-                int id = resultSet.getInt("id");
-                String studentName = resultSet.getString("name");
-                LocalDate birthDate = resultSet.getObject("birth_date", LocalDate.class);
-
-                Student student = new Student(id, studentName, birthDate);
-                matchingStudents.add(student);
-
-                System.out.println("ID: " + id + ", Name: " + studentName + ", Birth Date: " + birthDate);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+            return fromResultSet(statement.executeQuery());
         }
-        matchingStudents.sort(Comparator.comparing(Student::getName, Comparator.nullsLast(Comparator.naturalOrder())));
-
-        return matchingStudents;
     }
 
 
-    public static List<Student> getByCurrentMonth() {
+    public List<Student> getByCurrentMonth() throws SQLException {
         List<Student> studentsInCurrentMonth = new ArrayList<>();
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(
                      "SELECT * FROM students WHERE EXTRACT(MONTH FROM birth_date) = EXTRACT(MONTH FROM CURRENT_DATE)"
              )) {
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                int id = resultSet.getInt("id");
-                String name = resultSet.getString("name");
-                LocalDate birthDate = resultSet.getObject("birth_date", LocalDate.class);
-
-                Student student = new Student(id, name, birthDate);
-                studentsInCurrentMonth.add(student);
-                System.out.println("ID: " + id + ", Name: " + name + ", Birth Date: " + birthDate);
-            }
-            studentsInCurrentMonth.sort(Comparator.comparing(Student::getName));
-        } catch (SQLException e) {
-            e.printStackTrace();
+            return fromResultSet(statement.executeQuery());
         }
-        return studentsInCurrentMonth;
     }
-
 }

@@ -57,6 +57,7 @@ public class GradeDB {
             while (resultSet.next()) {
                 float grade = resultSet.getFloat("grade_value");
                 grades.add(grade);
+                System.out.println("Grades for student ID " + studentId + ":" + grade);
             }
         } catch (SQLException e) {
             e.printStackTrace();

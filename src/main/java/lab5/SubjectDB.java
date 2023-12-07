@@ -50,6 +50,8 @@ public class SubjectDB {
             while (resultSet.next()) {
                 String subjectName = resultSet.getString("subject_name");
                 subjects.add(subjectName);
+
+                System.out.println("Subject " + subjectName);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -68,6 +70,7 @@ public class SubjectDB {
 
             if (resultSet.next()) {
                 subjectName = resultSet.getString("subject_name");
+                System.out.println("Subject Name for ID " + id + " is: " + subjectName);
             }
         } catch (SQLException e) {
             e.printStackTrace();
